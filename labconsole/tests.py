@@ -10,7 +10,7 @@ class LabConsoleModelTest(TestCase):
     def test_viewlabconsole_model(self):
         labconsoleview = LabConsole.objects.create(username='testusername')
         labconsoletest = LabConsole.objects.get(username='testusername')
-        self.assertEqual(labconsoletest.testusername, 'testusername')
+        self.assertEqual(labconsoletest.username, 'testusername')
 
 class LabConsoleTest(TestCase):
     def test_index(self):
