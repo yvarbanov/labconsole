@@ -8,12 +8,12 @@ from .models import LabConsole
 
 import openstack
 
-def index(request):
+def _connect():
     server = os.getenv('OS_AUTH')
     project = os.getenv('OS_PROJECT_NAME')
     username = os.getenv('OS_USERNAME')
     password = os.getenv('OS_PASSWORD')
-    conn = openstack.connection.Connection(
+    return openstack.connection.Connection(
                 auth=dict(
                 auth_url=server,
                 project_name=project,
@@ -25,12 +25,21 @@ def index(request):
                 region_name="regionOne",
             )
 
+
+def index(request):
+    conn = _connect()
     return HttpResponse([server.name for server in conn.compute.servers()])
     #return render(request, 'welcome/index.html', {
     #    'hostname': hostname,
     #    'database': database.info(),
     #    'count': PageView.objects.count()
     #})
+
+def console(request, server):
+    conn = _connect()
+    console = conn.compute.get_vnc_console(server)
+    return HttpResponse(console)
+
 
 def health(request):
     return HttpResponse(1)
