@@ -18,7 +18,7 @@ def index(request):
                 auth_url=server,
                 project_name=project,
                 username=username,
-                password=_password,
+                password=password,
                 project_domain_name="Default",
                 user_domain_name="Default"),
                 identity_api_version=3,
