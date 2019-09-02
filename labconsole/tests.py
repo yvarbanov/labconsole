@@ -8,9 +8,9 @@ from django.test import TestCase
 # and OpenShift when building an application image.
 class LabConsoleModelTest(TestCase):
     def test_viewlabconsole_model(self):
-        labconsoleview = LabConsole.objects.create(hostname='localhost')
-        labconsoletest = LabConsole.objects.get(hostname='localhost')
-        self.assertEqual(labconsoletest.hostname, 'localhost')
+        labconsoleview = LabConsole.objects.create(username='testusername')
+        labconsoletest = LabConsole.objects.get(username='testusername')
+        self.assertEqual(labconsoletest.testusername, 'testusername')
 
 class LabConsoleTest(TestCase):
     def test_index(self):
