@@ -13,7 +13,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LabConsole',
             fields=[
-                ('token', models.CharField(max_length=32, auto_created=False, primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, serialize=False, primary_key=True)),
+                ('token', models.CharField(max_length=32)),
                 ('username', models.CharField(max_length=20)),
                 ('password', models.CharField(max_length=20)),
                 ('project', models.CharField(max_length=20)),
