@@ -35,10 +35,20 @@ def index(request):
     #    'count': PageView.objects.count()
     #})
 
+def get_vm(self, name):
+    """Get a VM by name."""
+    vms = self._client.compute.servers()
+
+
 def console(request, server):
     conn = _connect()
-    console = conn.compute.get_vnc_console(server)
-    return HttpResponse(console)
+    vms = conn.compute.servers()
+    for vm in vms:
+        if vm.name == name:
+            console = conn.get_server_console(server)
+            return HttpResponse(console)
+    
+    return HttpResponse("error")
 
 
 def health(request):
