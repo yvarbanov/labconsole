@@ -1,4 +1,4 @@
 List of VMs:<br/>
 {% for vm in vms %}
-Name: {{ vm.name }} <a href="/console/{{ vm.name }}" target="_blank">console</a><br />
+Name: {{ vm.name }} Sate: {{ vm.state }} ({{ vm.task_state }}) <a href="/console/{{ vm.name }}" target="_blank">console</a><br />
 {% endfor %}
