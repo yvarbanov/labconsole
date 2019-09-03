@@ -59,4 +59,3 @@ def console(request, server):
 def health(request):
     return HttpResponse(1)
 
-console("ipmi-host")
