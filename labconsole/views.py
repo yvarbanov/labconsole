@@ -49,7 +49,7 @@ def console(request, server):
     for vm in vms:
       body = {'os-getVNCConsole': {'type': 'novnc'}}
       headers = {'Accept': ''}
-      resp = conn.session.post( '/servers/{server_id}/action'.format(server_id=vm.id),json=body, headers=headers, endpoint_filter=compute_service.ComputeService())
+      resp = conn.session.post( '/servers/{server_id}/action'.format(server_id=vm.id),json=body, headers=headers, endpoint_filter={'service_type': 'compute'})
       content = json.loads(resp.content)
       return render(request, 'console.html', {'console': content["console"]["url"] })
     
