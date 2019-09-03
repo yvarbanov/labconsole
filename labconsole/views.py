@@ -7,6 +7,8 @@ from . import database
 from .models import LabConsole 
 
 import openstack
+from openstack.compute import compute_service
+import json
 
 def _connect():
     server = os.getenv('OS_AUTH')
@@ -28,7 +30,8 @@ def _connect():
 
 def index(request):
     conn = _connect()
-    return HttpResponse([server.name for server in conn.compute.servers()])
+    vms = conn.compute.servers()
+    return render(request, 'index.html', {'vms': vms })
     #return render(request, 'welcome/index.html', {
     #    'hostname': hostname,
     #    'database': database.info(),
@@ -42,14 +45,18 @@ def get_vm(self, name):
 
 def console(request, server):
     conn = _connect()
-    vms = conn.compute.servers()
+    vms = conn.compute.servers(details=False, name=server)
     for vm in vms:
-        if vm.name == server:
-            console = conn.get_server_console(server)
-            return HttpResponse(console)
+      body = {'os-getVNCConsole': {'type': 'novnc'}}
+      headers = {'Accept': ''}
+      resp = conn.session.post( '/servers/{server_id}/action'.format(server_id=vm.id),json=body, headers=headers, endpoint_filter=compute_service.ComputeService())
+      content = json.loads(resp.content)
+      return render(request, 'console.html', {'console': content["console"]["url"] })
     
     return HttpResponse("error")
 
 
 def health(request):
     return HttpResponse(1)
+
+console("ipmi-host")
