@@ -44,7 +44,7 @@ def console(request, server):
     conn = _connect()
     vms = conn.compute.servers()
     for vm in vms:
-        if vm.name == name:
+        if vm.name == server:
             console = conn.get_server_console(server)
             return HttpResponse(console)
     
