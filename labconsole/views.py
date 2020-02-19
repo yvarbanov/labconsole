@@ -40,7 +40,7 @@ def index(request):
     projects = {}
     for project in conn.identity.projects(**search):
        projects[project.name] = []
-       for vm in conn.compute.servers({"project_id": project.id}):
+       for vm in conn.compute.servers(all_tenants=1,project_id=project.id):
            projects[project.name].append(vm)
 
     return render(request, 'index.html', {'projects': projects, 'user': user })
