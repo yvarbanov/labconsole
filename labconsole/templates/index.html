@@ -1,4 +1,7 @@
-List of VMs:<br/>
-{% for vm in vms %}
+List of VMs for user {{ user }}:<br/>
+{% for project in projects %}
+<strong>Project: {{ project }}</strong><br />
+{% for vm in projects[project] %}
 Name: {{ vm.name }} State: {{ vm.vm_state }} <a href="/console/{{ vm.name }}" target="_blank">console</a><br />
+{% endfor %}
 {% endfor %}
