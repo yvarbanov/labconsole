@@ -2,6 +2,8 @@ import os
 from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import redirect
+
 
 from . import database
 from .models import LabConsole 
@@ -55,15 +57,12 @@ def get_vm(self, name):
 
 def console(request, server):
     conn = _connect()
-    vms = conn.compute.servers(details=False, name=server)
-    for vm in vms:
-      body = {'os-getVNCConsole': {'type': 'novnc'}}
-      headers = {'Accept': ''}
-      resp = conn.session.post( '/servers/{server_id}/action'.format(server_id=vm.id),json=body, headers=headers, endpoint_filter={'service_type': 'compute'})
-      content = json.loads(resp.content)
-      return render(request, 'console.html', {'console': content["console"]["url"] })
-    
-    return HttpResponse("error")
+    body = {'os-getVNCConsole': {'type': 'novnc'}}
+    headers = {'Accept': ''}
+    resp = conn.session.post( '/servers/{server_id}/action'.format(server_id=server),json=body, headers=headers, endpoint_filter={'service_type': 'compute'})
+    content = json.loads(resp.content)
+    response = redirect(content["console"]["url"]) 
+    return response
 
 
 def health(request):
