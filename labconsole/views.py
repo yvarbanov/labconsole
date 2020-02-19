@@ -32,6 +32,8 @@ def index(request):
     conn = _connect()
     vms = conn.compute.servers()
     user = request.META.get("HTTP_X_FORWARDED_USER")
+    if not user:
+       user = ""
     search = {"tags":"student=" + user}
     projects = {}
     for project in conn.identity.projects(**search):
