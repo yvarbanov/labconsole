@@ -31,7 +31,7 @@ def _connect():
 def index(request):
     conn = _connect()
     vms = conn.compute.servers()
-    print(request.headers)
+    print(request.META)
     return render(request, 'index.html', {'vms': vms })
     #return render(request, 'welcome/index.html', {
     #    'hostname': hostname,
