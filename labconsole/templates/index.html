@@ -11,12 +11,12 @@ vCpus: {{ vm.flavor.vcpus}}<br />
 Disk: {{ vm.flavor.disk }} <br />
 Network:
 {% for network, ips in vm.addresses.items %}
-- {{ network }}:< br/>
+- {{ network }}:<br />
   {% for ip in ips %}
-     {{ ip.addr }}< br/>
+     {{ ip.addr }}<br />
   {% endfor %}
 {% endfor %}
 <a href="/console/{{ vm.id}}" target="_blank">Access console</a><br />
-</div
+</div>
 {% endfor %}
 {% endfor %}
