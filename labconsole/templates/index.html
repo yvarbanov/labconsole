@@ -11,7 +11,7 @@ vCpus: {{ vm.flavor.vcpus}}<br />
 Disk: {{ vm.flavor.disk }} <br />
 Network:
 {% for network, ips in vm.addresses.items %}
-- {{ network) }}:< br/>
+- {{ network }}:< br/>
   {% for ip in ips %}
      {{ ip.addr }}< br/>
   {% endfor %}
