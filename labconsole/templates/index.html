@@ -2,6 +2,11 @@ List of VMs for user {{ user }}:<br/>
 {% for project,vms in projects.items %}
 <strong>Project: {{ project }}</strong><br />
 {% for vm in vms %}
-Name: {{ vm.name }} State: {{ vm.vm_state }} <a href="/console/{{ vm.id}}" target="_blank">console</a><br />
+<div style="border: 1px">
+Name: {{ vm.name }}<br />
+State: {{ vm.vm_state }}<br />
+RAM: {{ vm.flavor.ram }}<br />
+<a href="/console/{{ vm.id}}" target="_blank">Access console</a><br />
+</div
 {% endfor %}
 {% endfor %}
