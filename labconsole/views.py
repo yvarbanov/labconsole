@@ -35,7 +35,7 @@ def index(request):
     vms = conn.compute.servers()
     projectstudent = os.getenv('OSP_PROJECT_STUDENT')
     project = conn.identity.projects(name=projectstudent)
-    vms = conn.compute.servers(all_tenants=1,project_id=projecti[0].id)
+    vms = conn.compute.servers(all_tenants=1,project_id=project[0].id)
 
     return render(request, 'index.html', {'vms': vms })
     #return render(request, 'welcome/index.html', {
