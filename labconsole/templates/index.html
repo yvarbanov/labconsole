@@ -8,12 +8,12 @@
 </body>
 
 {% for vm in vms %}
-<span style="border: 1px solid black; width: 200px;">
+<span style="border: 1px solid black; width: 200px; float: left;">
 Name: {{ vm.name }}<br />
 State: {{ vm.vm_state }}<br />
 <a href="javascript:console('/console/{{ vm.id}}');">Access console</a><br />
 </span>
 {% endfor %}
 
-<iframe id="console" src="about:blank" width="1024" height="768" frameborder="0" scrolling="yes"></iframe>
+<iframe id="console" src="about:blank" width="1400" height="768" frameborder="0" scrolling="yes"></iframe>
 </html>
