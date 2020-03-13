@@ -33,17 +33,11 @@ def _connect():
 def index(request):
     conn = _connect()
     vms = conn.compute.servers()
-    user = request.META.get("HTTP_X_FORWARDED_USER")
-    if not user:
-       user = ""
-    search = {"tags":"student=" + user}
+    project = os.getenv('OSP_PROJECT_STUDENT')
     projects = {}
-    for project in conn.identity.projects(**search):
-       projects[project.name] = []
-       for vm in conn.compute.servers(all_tenants=1,project_id=project.id):
-           projects[project.name].append(vm)
+    vms = conn.compute.servers(all_tenants=1,project_name=project):
 
-    return render(request, 'index.html', {'projects': projects, 'user': user })
+    return render(request, 'index.html', {'vms': vms })
     #return render(request, 'welcome/index.html', {
     #    'hostname': hostname,
     #    'database': database.info(),

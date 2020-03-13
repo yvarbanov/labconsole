@@ -1,22 +1,10 @@
-List of VMs for user {{ user }}:<br/>
-{% for project,vms in projects.items %}
-<strong>Project: {{ project }}</strong><br />
 {% for vm in vms %}
-<div style="border: 1px solid black; width: 200px;">
+<span style="border: 1px solid black; width: 200px;">
 Name: {{ vm.name }}<br />
 State: {{ vm.vm_state }}<br />
-Memory: {{ vm.flavor.ram }}<br />
-Flavor: {{ vm.flavor.original_name }}<br />
-vCpus: {{ vm.flavor.vcpus}}<br />
-Disk: {{ vm.flavor.disk }} <br />
-Network:
-{% for network, ips in vm.addresses.items %}
-- {{ network }}:<br />
-  {% for ip in ips %}
-     {{ ip.addr }}<br />
-  {% endfor %}
+<a href="/console/{{ vm.id}}">Access console</a><br />
+</span>
 {% endfor %}
-<a href="/console/{{ vm.id}}" target="_blank">Access console</a><br />
+
+<div id="console" style="width: 100%; height: 640px;">
 </div>
-{% endfor %}
-{% endfor %}
