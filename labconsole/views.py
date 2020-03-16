@@ -13,7 +13,7 @@ from openstack.compute import compute_service
 import json
 
 def _connect():
-    server = os.getenv('OS_AUTH')
+    server = os.getenv('OS_AUTH_URL')
     project = os.getenv('OS_PROJECT_NAME')
     username = os.getenv('OS_USERNAME')
     password = os.getenv('OS_PASSWORD')
@@ -33,11 +33,7 @@ def _connect():
 def index(request):
     conn = _connect()
     vms = conn.compute.servers()
-    projectstudent = os.getenv('OSP_PROJECT_STUDENT')
-    projects = conn.identity.projects(name=projectstudent)
-    for project in projects: 
-        vms = conn.compute.servers(all_tenants=1,project_id=project.id)
-
+    
     return render(request, 'index.html', {'vms': vms })
     #return render(request, 'welcome/index.html', {
     #    'hostname': hostname,
