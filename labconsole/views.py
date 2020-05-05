@@ -36,7 +36,7 @@ def index(request):
     user = request.META.get("HTTP_X_FORWARDED_USER")
     if not user:
        user = ""
-    search = {"tags":"student=" + user}
+    search = {"description":"student=" + user}
     projects = {}
     for project in conn.identity.projects(**search):
        projects[project.name] = []
