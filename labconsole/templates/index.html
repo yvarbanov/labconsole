@@ -1,21 +1,41 @@
-List of VMs for user {{ user }}:<br/>
-{% for project,vms in projects.items %}
-<strong>Project: {{ project }}</strong><br />
-{% for vm in vms %}
-<div style="border: 1px solid black; width: 200px;">
-Name: {{ vm.name }}<br />
-State: {{ vm.vm_state }}<br />
-Memory: {{ vm.flavor.ram }}<br />
-vCpus: {{ vm.flavor.vcpus}}<br />
-Disk: {{ vm.flavor.disk }} <br />
-Network:
-{% for network, ips in vm.addresses.items %}
-- {{ network }}:<br />
-  {% for ip in ips %}
-     {{ ip.addr }}<br />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+   <title>OPENTLC OpenSTack VNC</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
+</head>
+<body>
+<div class="container">
+  List of VMs for user {{ user }}:<br/>
+  {% for project,vms in projects.items %}
+  <strong>Project: {{ project }}</strong><br />
+  {% for vm in vms %}
+  <div style="border: 1px solid black; width: 200px;">
+  <strong>Name</strong>: {{ vm.name }}<br />
+  <strong>State</strong>: {{ vm.vm_state }}<br />
+  <strong>Memory</strong>: {{ vm.flavor.ram }}<br />
+  <strong>vCpus</strong>: {{ vm.flavor.vcpus}}<br />
+  <strong>Disk</strong>: {{ vm.flavor.disk }} <br />
+  <strong>Network</strong>:
+  <ul>
+  {% for network, ips in vm.addresses.items %}
+  <li>{{ network }}:<br />
+    {% for ip in ips %}
+       {{ ip.addr }}<br />
+    {% endfor %}
+  </li>
   {% endfor %}
-{% endfor %}
-<a href="/console/{{ vm.id}}" target="_blank">Access console</a><br />
+  </ul>
+  <a href="/console/{{ vm.id}}" target="_blank">Access console</a><br />
+  </div>
+  {% endfor %}
+  {% endfor %}
+
 </div>
-{% endfor %}
-{% endfor %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
+</body>
+</html>
