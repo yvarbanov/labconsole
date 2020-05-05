@@ -1,19 +1,22 @@
-<html>
-<body>
-<script>
-  function console(link) {
-    document.getElementById('console').src = link;
-  }
-</script>
-</body>
-
+List of VMs for user {{ user }}:<br/>
+{% for project,vms in projects.items %}
+<strong>Project: {{ project }}</strong><br />
 {% for vm in vms %}
-<span style="border: 1px solid black; width: 200px; float: left;">
+<div style="border: 1px solid black; width: 200px;">
 Name: {{ vm.name }}<br />
 State: {{ vm.vm_state }}<br />
-<a href="javascript:console('/console/{{ vm.id}}');">Access console</a><br />
-</span>
+Memory: {{ vm.flavor.ram }}<br />
+Flavor: {{ vm.flavor.original_name }}<br />
+vCpus: {{ vm.flavor.vcpus}}<br />
+Disk: {{ vm.flavor.disk }} <br />
+Network:
+{% for network, ips in vm.addresses.items %}
+- {{ network }}:<br />
+  {% for ip in ips %}
+     {{ ip.addr }}<br />
+  {% endfor %}
 {% endfor %}
-
-<iframe id="console" src="about:blank" width="1400" height="768" frameborder="0" scrolling="yes"></iframe>
-</html>
+<a href="/console/{{ vm.id}}" target="_blank">Access console</a><br />
+</div>
+{% endfor %}
+{% endfor %}
