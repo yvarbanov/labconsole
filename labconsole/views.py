@@ -33,7 +33,7 @@ def _connect():
 def index(request):
     conn = _connect()
     vms = conn.compute.servers()
-    user = request.META.get("HTTP_X_FORWARDED_USER")
+    user = request.META.get("HTTP_X_FORWARDED_USER") or os.getenv('TEST_USER')
     if not user:
        user = ""
     search = {"tags":"student=" + user}
@@ -53,6 +53,29 @@ def index(request):
 def get_vm(self, name):
     """Get a VM by name."""
     vms = self._client.compute.servers()
+
+def start_vm(request, server):
+    conn = _connect()
+    conn.compute.start_server(server)
+    return HttpResponse(1)
+
+def stop_vm(request, server):
+    conn = _connect()
+    conn.compute.stop_server(server)
+    return HttpResponse(1)
+
+def restart_vm(request, server):
+    conn = _connect()
+    conn.compute.reboot_server(server, reboot_type="HARD")
+    return HttpResponse(1)
+
+def rebuild_vm(request, server, name, image):
+    conn = _connect()
+    vm = conn.compute.get_server(server)
+    attrs = {"image": image}
+    conn.compute.rebuild_server(server, name, "1234", **attrs)
+    return HttpResponse(1)
+
 
 
 def console(request, server):

@@ -6,36 +6,82 @@
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
 </head>
-<body>
-<div class="container">
-  List of VMs for user {{ user }}:<br/>
+<body class="cards-pf">
+<nav class="navbar navbar-default navbar-pf" role="navigation">
+<div class="navbar-header" style="color: white; font-size: 28px; text-align: center">
+<a class="navbar-brand" href="/"><img src="/static/Logo-RedHat-A-Color-RGB.png" style="float: left;"/></a>
+List of VMs for user <strong>{{ user }}</strong><br/>
+</div>
+</nav>
+<div class="container-fluid container-cards-pf">
+  <ul class="nav nav-tabs">
   {% for project,vms in projects.items %}
-  <strong>Project: {{ project }}</strong><br />
-  {% for vm in vms %}
-  <div style="border: 1px solid black; width: 200px;">
-  <strong>Name</strong>: {{ vm.name }}<br />
-  <strong>State</strong>: {{ vm.vm_state }}<br />
-  <strong>Memory</strong>: {{ vm.flavor.ram }}<br />
-  <strong>vCpus</strong>: {{ vm.flavor.vcpus}}<br />
-  <strong>Disk</strong>: {{ vm.flavor.disk }} <br />
-  <strong>Network</strong>:
-  <ul>
-  {% for network, ips in vm.addresses.items %}
-  <li>{{ network }}:<br />
-    {% for ip in ips %}
-       {{ ip.addr }}<br />
-    {% endfor %}
-  </li>
+    <li {% if forloop.counter0 == 0 %}class="active"{%endif%}><a data-toggle="tab" href="#{{ forloop.counter0 }}">{{ project }}</a></li>
   {% endfor %}
   </ul>
-  <a href="/console/{{ vm.id}}" target="_blank">Access console</a><br />
+  <div class="tab-content">
+  {% for project,vms in projects.items %}
+  <div class="row row-cards-pf tab-pane fade {% if forloop.counter0 == 0 %}in active{%endif %}" id="{{ forloop.counter0 }}" style="padding-top: 20px;">
+    {% for vm in vms %}
+    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+      <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select card-pf-accented" style="min-height: 290px; padding-top: 10px; width: 260px;">
+      <h3 class="pf-c-title pf-m-lg ws-example-heading"><strong>{{ vm.name }}</strong></h3>
+      {% if vm.task_state %}
+      <strong>Task state</strong>: {{ vm.task_state }}<br />
+      {% endif %}
+      <strong>State</strong>: {{ vm.vm_state }}<br />
+      <strong>Memory</strong>: {{ vm.flavor.ram }} &bull; <strong>vCpus</strong>: {{ vm.flavor.vcpus}} &bull; <strong>Disk</strong>: {{ vm.flavor.disk }} <br />
+      <strong>Network</strong>:
+      <ul>
+      {% for network, ips in vm.addresses.items %}
+      <li>{{ network }}:<br />
+        {% for ip in ips %}
+           {{ ip.addr }}<br />
+        {% endfor %}
+      </li>
+    {% endfor %}
+      </ul>
+      <div style="position: absolute; bottom: 10px;">
+      <button type="button" class="btn btn-primary btn-xs showModal" data-href="/console/{{ vm.id}}" style="width: 212px;">Access Console</button> <br/>
+      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/start/{{ vm.id}}')" target="_blank">Start</button> 
+      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/stop/{{ vm.id}}')" target="_blank">Stop</button> 
+      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/restart/{{ vm.id}}')" target="_blank">Force Restart</button> 
+      <button type="button" class="btn btn-danger btn-xs" onclick="confirmation('/rebuild/{{ vm.id}}/{{ vm.name }}/{{ vm.image.id }} ')" target="_blank">Rebuild</button> 
+      </div>
+      </div>
+    </div>
+    {% endfor %}<!-- /card -->
+  </div><!-- /col -->
+  {% endfor %}
   </div>
-  {% endfor %}
-  {% endfor %}
+
+</div><!-- /container -->
+
+<div class="modal fade" id="consoleModal" style="">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-content" style="width: 1200px;">
+  <iframe width="1200" height="800" frameborder="0" allowtransparency="true"></iframe>
+  </div>
+</div>
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
+<script>
+$(document).ready(function() {
+  $(".showModal").click(function(e) {
+    e.preventDefault();
+    var url = $(this).attr("data-href");
+    $("#consoleModal iframe").attr("src", url);
+    $("#consoleModal").modal("show");
+  });
+});
+function confirmation(url) {
+  if (confirm("Are you sure? Reload manually to check the status")) {
+    $.ajax({"url": url});
+  }
+}
+</script>
 </body>
 </html>

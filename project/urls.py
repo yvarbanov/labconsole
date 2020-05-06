@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from labconsole.views import index, health, console
+from labconsole.views import *
 
 urlpatterns = [
     # Examples:
@@ -11,6 +11,10 @@ urlpatterns = [
 
     url(r'^$', index),
     url(r'^console/(?P<server>[\S]+)$', console),
+    url(r'^start/(?P<server>[\S]+)$', start_vm),
+    url(r'^stop/(?P<server>[\S]+)$', stop_vm),
+    url(r'^restart/(?P<server>[\S]+)$', restart_vm),
+    url(r'^rebuild/(?P<server>[\S]+)/(?P<name>[\S]+)/(?P<image>[\S]+)$', rebuild_vm),
     url(r'^health$', health),
     url(r'^admin/', include(admin.site.urls)),
 ]
