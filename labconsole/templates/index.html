@@ -75,7 +75,7 @@ $(document).ready(function() {
   $(".showModal").click(function(e) {
     e.preventDefault();
     var url = $(this).attr("data-href");
-    if (location.protocol !== 'https:') {
+    if (location.protocol == 'https:') {
       window.open(url, '_blank');
     } else {
       $("#consoleModal iframe").attr("src", url);
