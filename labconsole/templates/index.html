@@ -75,14 +75,16 @@ $(document).ready(function() {
   $(".showModal").click(function(e) {
     e.preventDefault();
     var url = $(this).attr("data-href");
-    $("#consoleModal iframe").attr("src", url);
-    $("#consoleModal").modal("show");
+    if (location.protocol !== 'https:') {
+      window.open(url, '_blank');
+    } else {
+      $("#consoleModal iframe").attr("src", url);
+      $("#consoleModal").modal("show");
+    }
   });
   const urlParams = new URLSearchParams(window.location.search);
   const project = urlParams.get('project');
   if (project)  {
-    alert($('#tab-projects').html())
-    alert($('#tab-projects a[id="tab-' + project + '"]').html());
     $('#tab-projects a[id="tab-' + project + '"]').tab('show')
   }
 });
