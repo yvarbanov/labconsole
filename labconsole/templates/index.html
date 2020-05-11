@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-   <title>OPENTLC OpenSTack VNC</title>
+   <title>Lab Console</title>
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
 </head>
@@ -14,9 +14,9 @@ List of VMs for user <strong>{{ user }}</strong><br/>
 </div>
 </nav>
 <div class="container-fluid container-cards-pf">
-  <ul class="nav nav-tabs">
+  <ul class="nav nav-tabs" id="tab-projects">
   {% for project,vms in projects.items %}
-    <li {% if forloop.counter0 == 0 %}class="active"{%endif%}><a data-toggle="tab" href="#{{ forloop.counter0 }}">{{ project }}</a></li>
+    <li {% if forloop.counter0 == 0 %}class="active"{%endif%}><a data-toggle="tab" id="tab-{{ project }}" href="#{{ forloop.counter0 }}">{{ project }}</a></li>
   {% endfor %}
   </ul>
   <div class="tab-content">
@@ -46,7 +46,9 @@ List of VMs for user <strong>{{ user }}</strong><br/>
       <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/start/{{ vm.id}}')" target="_blank">Start</button> 
       <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/stop/{{ vm.id}}')" target="_blank">Stop</button> 
       <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/restart/{{ vm.id}}')" target="_blank">Force Restart</button> 
+      {% if vm.metadata.AnsibleGroup != "bastions" %}
       <button type="button" class="btn btn-danger btn-xs" onclick="confirmation('/rebuild/{{ vm.id}}/{{ vm.name }}/{{ vm.image.id }} ')" target="_blank">Rebuild</button> 
+      {% endif %}
       </div>
       </div>
     </div>
@@ -76,6 +78,13 @@ $(document).ready(function() {
     $("#consoleModal iframe").attr("src", url);
     $("#consoleModal").modal("show");
   });
+  const urlParams = new URLSearchParams(window.location.search);
+  const project = urlParams.get('project');
+  if (project)  {
+    alert($('#tab-projects').html())
+    alert($('#tab-projects a[id="tab-' + project + '"]').html());
+    $('#tab-projects a[id="tab-' + project + '"]').tab('show')
+  }
 });
 function confirmation(url) {
   if (confirm("Are you sure? Reload manually to check the status")) {
