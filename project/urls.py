@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'^stop/(?P<server>[\S]+)$', stop_vm),
     url(r'^restart/(?P<server>[\S]+)$', restart_vm),
     url(r'^rebuild/(?P<server>[\S]+)/(?P<name>[\S]+)/(?P<image>[\S]+)$', rebuild_vm),
+    url(r'^rescue/(?P<server>[\S]+)/(?P<image>[\S]+)$', rescue_vm),
+    url(r'^unrescue/(?P<server>[\S]+)$', unrescue_vm),
     url(r'^health$', health),
     url(r'^admin/', include(admin.site.urls)),
 ]

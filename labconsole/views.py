@@ -71,9 +71,20 @@ def restart_vm(request, server):
 
 def rebuild_vm(request, server, name, image):
     conn = _connect()
-    vm = conn.compute.get_server(server)
+    #vm = conn.compute.get_server(server)
     attrs = {"image": image}
     conn.compute.rebuild_server(server, name, "1234", **attrs)
+    return HttpResponse(1)
+
+def rescue_vm(request, server, image):
+    conn = _connect()
+    image = conn.image.find_image(image)
+    conn.compute.rescue_server(server, admin_pass="", image_ref=image.id)
+    return HttpResponse(1)
+
+def unrescue_vm(request, server):
+    conn = _connect()
+    conn.compute.unrescue_server(server)
     return HttpResponse(1)
 
 

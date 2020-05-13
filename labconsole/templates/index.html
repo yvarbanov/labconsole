@@ -22,9 +22,10 @@ List of VMs for user <strong>{{ user }}</strong><br/>
   <div class="tab-content">
   {% for project,vms in projects.items %}
   <div class="row row-cards-pf tab-pane fade {% if forloop.counter0 == 0 %}in active{%endif %}" id="{{ forloop.counter0 }}" style="padding-top: 20px;">
+    <button class="btn btn-primary" onclick="location.href='?project={{ project }}'" style="display: block;margin-bottom: 15px;" ><span class="glyphicon glyphicon-refresh"></span> Refresh Information</button>
     {% for vm in vms %}
     <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
-      <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select card-pf-accented" style="min-height: 290px; padding-top: 10px; width: 260px;">
+      <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select card-pf-accented" style="min-height: 320px; padding-top: 10px; width: 260px;">
       <h3 class="pf-c-title pf-m-lg ws-example-heading"><strong>{{ vm.name }}</strong></h3>
       {% if vm.task_state %}
       <strong>Task state</strong>: {{ vm.task_state }}<br />
@@ -48,6 +49,11 @@ List of VMs for user <strong>{{ user }}</strong><br/>
       <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/restart/{{ vm.id}}')" target="_blank">Force Restart</button> 
       {% if vm.metadata.AnsibleGroup != "bastions" %}
       <button type="button" class="btn btn-danger btn-xs" onclick="confirmation('/rebuild/{{ vm.id}}/{{ vm.name }}/{{ vm.image.id }} ')" target="_blank">Rebuild</button> 
+      {% endif %}
+      {% if vm.metadata.cdrom and not vm.task_state and vm.vm_state == "active" %}
+        <button type="button" class="btn btn-info btn-xs" onclick="confirmation('/rescue/{{ vm.id}}/{{ vm.metadata.cdrom }} ')" target="_blank">Boot from CD</button> 
+      {% elif vm.metadata.cdrom and vm.vm_state == "rescued" %}
+        <button type="button" class="btn btn-info btn-xs" onclick="confirmation('/unrescue/{{ vm.id}} ')" target="_blank">Remove CD</button> 
       {% endif %}
       </div>
       </div>
