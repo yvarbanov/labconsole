@@ -1,3 +1,112 @@
-<iframe src="{{ console }}" style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+   <title>Lab Console</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
+</head>
+<span style="width: 300px;">
+    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+      <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select card-pf-accented" style="min-height: 320px; padding-top: 10px; width: 260px;">
+      <h3 class="pf-c-title pf-m-lg ws-example-heading"><strong>{{ vm.name }}</strong></h3>
+      {% if vm.task_state %}
+      <strong>Task state</strong>: {{ vm.task_state }}<br />
+      {% endif %}
+      <strong>State</strong>: {{ vm.vm_state }}<br />
+      <strong>Memory</strong>: {{ vm.flavor.ram }} &bull; <strong>vCpus</strong>: {{ vm.flavor.vcpus}} &bull; <strong>Disk</strong>: {{ vm.flavor.disk }} <br />
+      <strong>Network</strong>:
+      <ul>
+      {% for network, ips in vm.addresses.items %}
+      <li>{{ network }}:<br />
+        {% for ip in ips %}
+           {{ ip.addr }}<br />
+        {% endfor %}
+      </li>
+    {% endfor %}
+      </ul>
+
+      <div style="position: absolute; bottom: 10px;">
+      {% if vm.vm_state != "rescued" %}
+      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/start/{{ vm.id}}')" target="_blank">Start</button> 
+      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/stop/{{ vm.id}}')" target="_blank">Stop</button> 
+      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/restart/{{ vm.id}}')" target="_blank">Force Restart</button> 
+      {% endif %}
+      {% if vm.metadata.AnsibleGroup != "bastions" %}
+      <button type="button" class="btn btn-danger btn-xs" onclick="confirmation('/rebuild/{{ vm.id}}/{{ vm.name }}/{{ vm.image.id }} ')" target="_blank">Rebuild</button> 
+      {% endif %}
+      {% if vm.metadata.cdrom and not vm.task_state and vm.vm_state == "active" %}
+        <button type="button" class="btn btn-info btn-xs" onclick="confirmation('/rescue/{{ vm.id}}/{{ vm.metadata.cdrom }} ')" target="_blank">Boot from CD</button> 
+      {% elif vm.metadata.cdrom and vm.vm_state == "rescued" %}
+        <button type="button" class="btn btn-info btn-xs" onclick="confirmation('/unrescue/{{ vm.id}} ')" target="_blank">Remove CD</button> 
+      {% endif %}
+      </div>
+      </div>
+ 
+
+
+
+
+
+
+    </div>
+<div class="modal " id="cdromModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <span class="pficon pficon-close"></span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Boot from CD information</h4>
+      </div>
+      <div class="modal-body">
+        <strong style="color: red">Important:</strong> booting from CDROM will cause the root disk will be available as <strong>vdb</strong> and the CDROM as <strong>vda</strong><br />
+        When you finish using the CDROM, reload the screen and press <strong>Remove CD</strong> to reboot the VM and root disk will be available again as <strong>vda</strong>.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="cdromModalok">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<span>
+<iframe src="{{ console }}" style="position:fixed; top:0; left:270px; bottom:0; right:0; width:85%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:-2;">
       Your browser doesn't support iframes
 </iframe>
+</span>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
+<script>
+$(document).ready(function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const project = urlParams.get('project');
+  if (project)  {
+    $('#tab-projects a[id="tab-' + project + '"]').tab('show')
+  }
+});
+function confirmation(url) {
+   if (url.includes("rescue")) {
+     $("#cdromModalok").attr("onclick", "bootfromcd('" + url + "');")
+     $("#cdromModal").modal("show");
+   } else if (url.includes("console")) {
+     alert(url);
+     window.open(url, '_blank');
+   } else {
+     if (confirm("Are you sure? Reload manually to check the status")) {
+      $.ajax({"url": url});
+     }
+   } 
+}
+
+function bootfromcd(url) {
+    $.ajax({"url": url});
+    $("#cdromModal").modal("hide");
+}
+
+</script>
+</body>
+</html>

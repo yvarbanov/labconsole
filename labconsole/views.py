@@ -95,8 +95,10 @@ def console(request, server):
     headers = {'Accept': ''}
     resp = conn.session.post( '/servers/{server_id}/action'.format(server_id=server),json=body, headers=headers, endpoint_filter={'service_type': 'compute'})
     content = json.loads(resp.content)
-    response = redirect(content["console"]["url"]) 
-    return response
+    vm = conn.compute.get_server(server)
+    #response = redirect(content["console"]["url"]) 
+    return render(request, 'console.html', {'console': content["console"]["url"].replace("auto", "novello"), 'vm': vm})
+    #return response
 
 
 def health(request):

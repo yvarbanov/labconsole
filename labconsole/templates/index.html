@@ -43,7 +43,7 @@ List of VMs for user <strong>{{ user }}</strong><br/>
     {% endfor %}
       </ul>
       <div style="position: absolute; bottom: 10px;">
-      <button type="button" class="btn btn-primary btn-xs showModal" data-href="/console/{{ vm.id}}" style="width: 212px;">Access Console</button> <br/>
+      <button type="button" class="btn btn-primary btn-xs" onclick="confirmation('/console/{{ vm.id}}')" style="width: 212px;">Access Console</button> <br/>
       {% if vm.vm_state != "rescued" %}
       <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/start/{{ vm.id}}')" target="_blank">Start</button> 
       <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/stop/{{ vm.id}}')" target="_blank">Stop</button> 
@@ -67,12 +67,37 @@ List of VMs for user <strong>{{ user }}</strong><br/>
 
 </div><!-- /container -->
 
-<div class="modal fade" id="consoleModal" style="">
+<!--<div class="modal fade" id="consoleModal" style="">
 <div class="modal-dialog modal-lg modal-dialog-centered">
   <div class="modal-content" style="width: 1200px;">
   <iframe width="1200" height="800" frameborder="0" allowtransparency="true"></iframe>
   </div>
+</div>-->
+
+
+<div class="modal fade" id="cdromModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <span class="pficon pficon-close"></span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Boot from CD information</h4>
+      </div>
+      <div class="modal-body">
+        <strong style="color: red">Important:</strong> booting from CDROM will cause the root disk will be available as <strong>vdb</strong> and the CDROM as <strong>vda</strong><br />
+        When you finish using the CDROM, reload the screen and press <strong>Remove CD</strong> to reboot the VM and root disk will be available again as <strong>vda</strong>.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="cdromModalok">OK</button>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -80,16 +105,6 @@ List of VMs for user <strong>{{ user }}</strong><br/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
 <script>
 $(document).ready(function() {
-  $(".showModal").click(function(e) {
-    e.preventDefault();
-    var url = $(this).attr("data-href");
-    if (location.protocol == 'https:') {
-      window.open(url, '_blank');
-    } else {
-      $("#consoleModal iframe").attr("src", url);
-      $("#consoleModal").modal("show");
-    }
-  });
   const urlParams = new URLSearchParams(window.location.search);
   const project = urlParams.get('project');
   if (project)  {
@@ -97,10 +112,24 @@ $(document).ready(function() {
   }
 });
 function confirmation(url) {
-  if (confirm("Are you sure? Reload manually to check the status")) {
-    $.ajax({"url": url});
-  }
+   if (url.includes("rescue")) {
+     $("#cdromModalok").attr("onclick", "bootfromcd('" + url + "');")
+     $("#cdromModal").modal("show");
+   } else if (url.includes("console")) {
+     url = "http://console-" + window.location.hostname + url
+     window.open(url, '_blank');
+   } else {
+     if (confirm("Are you sure? Reload manually to check the status")) {
+      $.ajax({"url": url});
+     }
+   } 
 }
+
+function bootfromcd(url) {
+    $.ajax({"url": url});
+    $("#cdromModal").modal("hide");
+}
+
 </script>
 </body>
 </html>
