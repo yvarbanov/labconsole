@@ -96,7 +96,7 @@ function confirmation(url) {
      window.open(url, '_blank');
    } else {
      if (confirm("Are you sure? Reload manually to check the status")) {
-      url = "https://" + window.location.hostname.replace("console-","") + url
+      url = "http://" + window.location.hostname.replace("console-","") + url
       $.ajax({"url": url});
      }
    } 
