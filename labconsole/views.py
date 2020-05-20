@@ -57,35 +57,47 @@ def get_vm(self, name):
 def start_vm(request, server):
     conn = _connect()
     conn.compute.start_server(server)
-    return HttpResponse(1)
+    response = {}
+    response["Access-Control-Allow-Origin"] = "*"
+    return response
 
 def stop_vm(request, server):
     conn = _connect()
     conn.compute.stop_server(server)
-    return HttpResponse(1)
+    response = {}
+    response["Access-Control-Allow-Origin"] = "*"
+    return response
 
 def restart_vm(request, server):
     conn = _connect()
     conn.compute.reboot_server(server, reboot_type="HARD")
-    return HttpResponse(1)
+    response = {}
+    response["Access-Control-Allow-Origin"] = "*"
+    return response
 
 def rebuild_vm(request, server, name, image):
     conn = _connect()
     #vm = conn.compute.get_server(server)
     attrs = {"image": image}
     conn.compute.rebuild_server(server, name, "1234", **attrs)
-    return HttpResponse(1)
+    response = {}
+    response["Access-Control-Allow-Origin"] = "*"
+    return response
 
 def rescue_vm(request, server, image):
     conn = _connect()
     image = conn.image.find_image(image)
     conn.compute.rescue_server(server, admin_pass="", image_ref=image.id)
-    return HttpResponse(1)
+    response = {}
+    response["Access-Control-Allow-Origin"] = "*"
+    return response
 
 def unrescue_vm(request, server):
     conn = _connect()
     conn.compute.unrescue_server(server)
-    return HttpResponse(1)
+    response = {}
+    response["Access-Control-Allow-Origin"] = "*"
+    return response
 
 
 
