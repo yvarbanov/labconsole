@@ -68,8 +68,7 @@ def stop_vm(request, server):
 def restart_vm(request, server):
     conn = _connect()
     conn.compute.reboot_server(server, reboot_type="HARD")
-    result = {'success': 1}
-    resp = JsonResponse(resutl)
+    resp = JsonResponse({'success': 1})
     resp['Access-Control-Allow-Origin'] = '*'
     return resp  
 
