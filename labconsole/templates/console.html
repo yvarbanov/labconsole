@@ -93,10 +93,10 @@ function confirmation(url) {
      $("#cdromModalok").attr("onclick", "bootfromcd('" + url + "');")
      $("#cdromModal").modal("show");
    } else if (url.includes("console")) {
-     alert(url);
      window.open(url, '_blank');
    } else {
      if (confirm("Are you sure? Reload manually to check the status")) {
+      url = "https://" + window.location.hostname.replace("console-","") + url
       $.ajax({"url": url});
      }
    } 
@@ -104,6 +104,7 @@ function confirmation(url) {
 
 function bootfromcd(url) {
     $.ajax({"url": url});
+    url = "https://" + window.location.hostname.replace("console-","") + url
     $("#cdromModal").modal("hide");
 }
 
