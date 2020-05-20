@@ -57,47 +57,35 @@ def get_vm(self, name):
 def start_vm(request, server):
     conn = _connect()
     conn.compute.start_server(server)
-    response = {}
-    response["Access-Control-Allow-Origin"] = "*"
-    return response
+    return HttpResponse(1)
 
 def stop_vm(request, server):
     conn = _connect()
     conn.compute.stop_server(server)
-    response = {}
-    response["Access-Control-Allow-Origin"] = "*"
-    return response
+    return HttpResponse(1)
 
 def restart_vm(request, server):
     conn = _connect()
     conn.compute.reboot_server(server, reboot_type="HARD")
-    response = {}
-    response["Access-Control-Allow-Origin"] = "*"
-    return response
+    return HttpResponse(1)
 
 def rebuild_vm(request, server, name, image):
     conn = _connect()
     #vm = conn.compute.get_server(server)
     attrs = {"image": image}
     conn.compute.rebuild_server(server, name, "1234", **attrs)
-    response = {}
-    response["Access-Control-Allow-Origin"] = "*"
-    return response
+    return HttpResponse(1)
 
 def rescue_vm(request, server, image):
     conn = _connect()
     image = conn.image.find_image(image)
     conn.compute.rescue_server(server, admin_pass="", image_ref=image.id)
-    response = {}
-    response["Access-Control-Allow-Origin"] = "*"
-    return response
+    return HttpResponse(1)
 
 def unrescue_vm(request, server):
     conn = _connect()
     conn.compute.unrescue_server(server)
-    response = {}
-    response["Access-Control-Allow-Origin"] = "*"
-    return response
+    return HttpResponse(1)
 
 
 
@@ -109,8 +97,9 @@ def console(request, server):
     content = json.loads(resp.content)
     vm = conn.compute.get_server(server)
     #response = redirect(content["console"]["url"]) 
-    return render(request, 'console.html', {'console': content["console"]["url"].replace("auto", "novello"), 'vm': vm})
-    #return response
+    response = render(request, 'console.html', {'console': content["console"]["url"].replace("auto", "novello"), 'vm': vm})
+    response["Access-Control-Allow-Origin"] = "*"
+    return response
 
 
 def health(request):
