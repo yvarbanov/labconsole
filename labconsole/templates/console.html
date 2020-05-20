@@ -104,7 +104,7 @@ function confirmation(url) {
 
 function bootfromcd(url) {
     $.ajax({"url": url});
-    url = "https://" + window.location.hostname.replace("console-","") + url
+    url = "http://" + window.location.hostname.replace("console-","") + url
     $("#cdromModal").modal("hide");
 }
 
