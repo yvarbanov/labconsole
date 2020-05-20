@@ -2,6 +2,7 @@ import os
 from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect
 
 
@@ -67,7 +68,10 @@ def stop_vm(request, server):
 def restart_vm(request, server):
     conn = _connect()
     conn.compute.reboot_server(server, reboot_type="HARD")
-    return HttpResponse(1)
+    result = {'success': 1}
+    resp = JsonResponse(resutl)
+    resp['Access-Control-Allow-Origin'] = '*'
+    return resp  
 
 def rebuild_vm(request, server, name, image):
     conn = _connect()
