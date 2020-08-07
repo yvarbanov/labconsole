@@ -4,4 +4,5 @@ django-cors-headers
 gunicorn==19.4.5
 psycopg2==2.7.3.1
 whitenoise==3.3.1
-openstacksdk
+dogpile.cache==0.6.5
+openstacksdk==0.39.0
