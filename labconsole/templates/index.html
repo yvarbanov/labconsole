@@ -117,7 +117,7 @@ function confirmation(url) {
      $("#cdromModalok").attr("onclick", "bootfromcd('" + url + "');")
      $("#cdromModal").modal("show");
    } else if (url.includes("console")) {
-     url = "http://console-" + window.location.hostname + url
+     url = "http://" + window.location.hostname + url
      window.open(url, '_blank');
    } else {
      if (confirm("Are you sure? Reload manually to check the status")) {
