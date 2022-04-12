@@ -43,19 +43,19 @@ List of VMs for user <strong>{{ user }}</strong><br/>
     {% endfor %}
       </ul>
       <div style="position: absolute; bottom: 10px;">
-      <button type="button" class="btn btn-primary btn-xs" onclick="confirmation('/console/{{ vm.id}}')" style="width: 212px;">Access Console</button> <br/>
+      <button type="button" class="btn btn-primary btn-xs" onclick="confirmation('/console/{{ vm.location.cloud }}/{{ vm.id}}')" style="width: 212px;">Access Console</button> <br/>
       {% if vm.vm_state != "rescued" %}
-      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/start/{{ vm.id}}')" target="_blank">Start</button> 
-      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/stop/{{ vm.id}}')" target="_blank">Stop</button> 
-      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/restart/{{ vm.id}}')" target="_blank">Force Restart</button> 
+      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/start/{{ vm.location.cloud }}/{{ vm.id}}')" target="_blank">Start</button> 
+      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/stop/{{ vm.location.cloud }}/{{ vm.id}}')" target="_blank">Stop</button> 
+      <button type="button" class="btn btn-default btn-xs" onclick="confirmation('/restart/{{ vm.location.cloud }}/{{ vm.id}}')" target="_blank">Force Restart</button> 
       {% endif %}
       {% if vm.metadata.AnsibleGroup != "bastions" %}
-      <button type="button" class="btn btn-danger btn-xs" onclick="confirmation('/rebuild/{{ vm.id}}/{{ vm.name }}/{{ vm.image.id }} ')" target="_blank">Rebuild</button> 
+      <button type="button" class="btn btn-danger btn-xs" onclick="confirmation('/rebuild/{{ vm.location.cloud }}/{{ vm.id}}/{{ vm.name }}/{{ vm.image.id }} ')" target="_blank">Rebuild</button> 
       {% endif %}
       {% if vm.metadata.cdrom and not vm.task_state and vm.vm_state == "active" %}
-        <button type="button" class="btn btn-info btn-xs" onclick="confirmation('/rescue/{{ vm.id}}/{{ vm.metadata.cdrom }} ')" target="_blank">Boot from CD</button> 
+        <button type="button" class="btn btn-info btn-xs" onclick="confirmation('/rescue/{{ vm.location.cloud }}/{{ vm.id}}/{{ vm.metadata.cdrom }} ')" target="_blank">Boot from CD</button> 
       {% elif vm.metadata.cdrom and vm.vm_state == "rescued" %}
-        <button type="button" class="btn btn-info btn-xs" onclick="confirmation('/unrescue/{{ vm.id}} ')" target="_blank">Remove CD</button> 
+        <button type="button" class="btn btn-info btn-xs" onclick="confirmation('/unrescue/{{ vm.location.cloud }}/{{ vm.id}} ')" target="_blank">Remove CD</button> 
       {% endif %}
       </div>
       </div>
