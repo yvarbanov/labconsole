@@ -55,7 +55,7 @@ def index(request):
             conn = _connect(cloud)
             projects = _vm_to_project(conn, user, projects)
     else:
-        conn = _connect('empty')
+        conn = _connect(False)
         projects = _vm_to_project(conn, user, projects)
     return render(request, 'index.html', {'projects': projects, 'user': user })
 
