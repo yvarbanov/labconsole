@@ -10,7 +10,7 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', index),
-    url(r'^console/(?P<cloud>.*?)/(?P<server>.*?)$', console),
+    url(r'^console/(?P<server>.*?)$', console),
     url(r'^start/(?P<cloud>.*?)/(?P<server>.*?)$', start_vm),
     url(r'^stop/(?P<cloud>.*?)/(?P<server>.*?)$', stop_vm),
     url(r'^restart/(?P<cloud>.*?)/(?P<server>.*?)$', restart_vm),
