@@ -37,7 +37,8 @@ def _vm_to_project(conn, user, projects):
     for project in conn.identity.projects():
         for tag in project.tags:
             if user in tag:
-                projects[project.name] = []
+                if project.name not in projects.keys():
+                    projects[project.name] = []
                 for vm in conn.compute.servers(all_tenants=1,project_id=project.id):
                     projects[project.name].append(vm)
     return projects
